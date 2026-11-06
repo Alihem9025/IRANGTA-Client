@@ -8,7 +8,7 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.nativo.rpg.br"
+        applicationId "com.irangta.launcher"
         minSdk 24
         targetSdk 35
         versionCode 1700
