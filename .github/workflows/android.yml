@@ -1,3 +1,4 @@
+
 name: Build Android APK
 
 on:
@@ -24,12 +25,13 @@ jobs:
           cache: gradle
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: platform-tools
 
       - name: Install Android build tools
         run: |
-          sdkmanager "platform-tools" \
-            "platforms;android-35" \
+          sdkmanager "platforms;android-35" \
             "build-tools;35.0.0" \
             "cmake;3.22.1" \
             "ndk;25.1.8937393"
@@ -43,11 +45,12 @@ jobs:
         run: ./gradlew --no-daemon --stacktrace assembleRelease
 
       - name: Verify APK signature
-        run: $ANDROID_HOME/build-tools/35.0.0/apksigner verify --verbose app/build/outputs/apk/release/nativo_sampmobile.apk
+        run: |
+          $ANDROID_HOME/build-tools/35.0.0/apksigner verify --verbose app/build/outputs/apk/release/nativo_sampmobile.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: nativorpg-release
+          name: IRANGTA-Client
           path: app/build/outputs/apk/release/nativo_sampmobile.apk
           if-no-files-found: error
