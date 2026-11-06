@@ -279,8 +279,8 @@ public class SplashActivity extends AppCompatActivity implements GLSurfaceView.R
                     if (gameStatus == UpdateActivity.GameStatus.GameUpdateRequired && !Utils.isTester(SplashActivity.this)) {
                         try {
                             new AlertDialog.Builder(SplashActivity.this)
-                                    .setTitle("Atualização:").setMessage("Atualização do aplicativo necessária! Toque em 'Atualizar' e baixe a versão mais recente pelo site.")
-                                    .setPositiveButton("Atualizar", (dialog, which) -> {
+                                    .setTitle("Update:").setMessage("An app update is required! Tap 'Update' to download the latest version from our website.")
+                                    .setPositiveButton("Update", (dialog, which) -> {
                                         /*Intent intent = new Intent(SplashActivity.this, UpdateActivity.class);
                                         intent.putExtra("mode", UpdateActivity.UpdateMode.GameUpdate.name());
                                         startActivity(intent);
