@@ -52,7 +52,7 @@ import com.nativo.rpg.br.ui.fragment.SupportPageFragment;
 @Obfuscate
 public class Utils {
     public static String copyright = "Copyright © NativoRPG";
-    public static String web = "https://raw.githubusercontent.com/east9-777/ATT-APK-NATIVO/main/";
+    public static String web = "https://raw.githubusercontent.com/Alihem9025/IRANGTA-Client/main/";
     public static String github = "https://github.com/east9-777";
     public static String update = web + "update.json";
     // TODO: coloque aqui o link de convite real do seu servidor Discord (ex: https://discord.gg/xxxxxxx)

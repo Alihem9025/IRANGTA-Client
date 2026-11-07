@@ -1,0 +1,7 @@
+{
+  "app_status": true,
+  "game_version": "1.0",
+  "full_list_url": "https://raw.githubusercontent.com/Alihem9025/IRANGTA-Client/main/data_lists/full_list.json",
+  "lite_list_url": "https://raw.githubusercontent.com/Alihem9025/IRANGTA-Client/main/data_lists/full_list.json",
+  "samp_list_url": "https://raw.githubusercontent.com/Alihem9025/IRANGTA-Client/main/data_lists/samp_list.json"
+}
