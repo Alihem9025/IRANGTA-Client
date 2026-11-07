@@ -1,4 +1,11 @@
 {
   "files": [],
-  "archives": []
+  "archives": [
+    {
+      "name": "gamedata",
+      "path": "",
+      "size": 617019857,
+      "url": "https://github.com/Alihem9025/IRANGTA-Client/releases/download/V1.0.0/gamedata.zip"
+    }
+  ]
 }
