@@ -34,7 +34,7 @@ jobs:
           sdkmanager "platforms;android-35" \
             "build-tools;35.0.0" \
             "cmake;3.22.1" \
-            "ndk;25.1.8937393"
+            "ndk;27.0.12077973"
 
       - name: Make Gradle executable
         run: |
