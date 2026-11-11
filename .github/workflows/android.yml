@@ -22,7 +22,6 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-          
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v4
@@ -42,7 +41,20 @@ jobs:
           chmod +x ./gradlew
 
       - name: Build release APK
-        run: ./gradlew --no-daemon --stacktrace assembleRelease
+        run: ./gradlew --no-daemon --no-build-cache --refresh-dependencies clean assembleRelease --stacktrace
+
+      - name: Diagnose resource compilation failure
+        if: failure()
+        shell: bash
+        run: |
+          echo "=== merged resource files ==="
+          find app/build/intermediates/incremental/release/mergeReleaseResources -type f -name "*.xml" -print 2>/dev/null || true
+          echo "=== merged values.xml ==="
+          find app/build/intermediates/incremental/release/mergeReleaseResources -type f -name "values.xml" -exec sh -c 'echo "FILE: $1"; cat "$1"' _ {} \; 2>/dev/null || true
+          echo "=== more_details occurrences ==="
+          grep -Rni -C 5 "more_details" app/build/intermediates/incremental/release/mergeReleaseResources 2>/dev/null || true
+          echo "=== unicode escape occurrences ==="
+          grep -RniF '\u' app/build/intermediates/incremental/release/mergeReleaseResources 2>/dev/null || true
 
       - name: Verify APK signature
         run: |
