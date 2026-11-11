@@ -43,24 +43,54 @@ jobs:
       - name: Build release APK
         run: ./gradlew --no-daemon --no-build-cache --refresh-dependencies clean assembleRelease --stacktrace
 
-      - name: Diagnose resource compilation failure
-        if: failure()
+      - name: Collect resource diagnostics
+        if: always()
         shell: bash
         run: |
-          echo "=== merged resource files ==="
-          find app/build/intermediates/incremental/release/mergeReleaseResources -type f -name "*.xml" -print 2>/dev/null || true
-          echo "=== merged values.xml ==="
-          find app/build/intermediates/incremental/release/mergeReleaseResources -type f -name "values.xml" -exec sh -c 'echo "FILE: $1"; cat "$1"' _ {} \; 2>/dev/null || true
-          echo "=== more_details occurrences ==="
-          grep -Rni -C 5 "more_details" app/build/intermediates/incremental/release/mergeReleaseResources 2>/dev/null || true
-          echo "=== unicode escape occurrences ==="
-          grep -RniF '\u' app/build/intermediates/incremental/release/mergeReleaseResources 2>/dev/null || true
+          mkdir -p diagnostics
+
+          echo "=== Build information ===" > diagnostics/report.txt
+          java -version 2>> diagnostics/report.txt
+          ./gradlew --version >> diagnostics/report.txt 2>&1 || true
+
+          echo "=== Source resource files ===" >> diagnostics/report.txt
+          find app/src -type f \( -name "*.xml" -o -name "*.arsc" \) >> diagnostics/report.txt
+
+          echo "=== Merged resource files ===" >> diagnostics/report.txt
+          find app/build/intermediates/incremental/release/mergeReleaseResources -type f -name "*.xml" >> diagnostics/report.txt 2>&1 || true
+
+          echo "=== Unicode escape occurrences ===" >> diagnostics/report.txt
+          grep -RniF '\u' app/src/main/res --include="*.xml" >> diagnostics/report.txt 2>&1 || true
+
+          echo "=== more_details occurrences ===" >> diagnostics/report.txt
+          grep -Rni -C 5 "more_details" app/src/main/res >> diagnostics/report.txt 2>&1 || true
+
+          if [ -d app/build/intermediates/incremental/release/mergeReleaseResources ]; then
+            mkdir -p diagnostics/merged-resources
+            cp -R app/build/intermediates/incremental/release/mergeReleaseResources/. diagnostics/merged-resources/ || true
+          fi
+
+          if [ -d app/build/outputs/logs ]; then
+            cp -R app/build/outputs/logs diagnostics/build-logs || true
+          fi
+
+          zip -qr resource-diagnostics.zip diagnostics
+
+      - name: Upload resource diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: IRANGTA-Resource-Diagnostics
+          path: resource-diagnostics.zip
+          if-no-files-found: warn
 
       - name: Verify APK signature
+        if: success()
         run: |
           $ANDROID_HOME/build-tools/35.0.0/apksigner verify --verbose app/build/outputs/apk/release/nativo_sampmobile.apk
 
       - name: Upload APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: IRANGTA-Client
